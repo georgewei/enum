@@ -5,17 +5,16 @@ import java.util.HashMap;
 import java.util.Collections;
 import java.lang.reflect.Field;
 
-final class Helper extends ClassValue<Map<Object,Object>> {
-    static final Helper INSTANCE = new Helper();
+final class StatusEnumHelper extends ClassValue<Map<Object,Object>> {
+    static final StatusEnumHelper INSTANCE = new StatusEnumHelper();
 
     @Override 
-    protected Map<Object, Object> computeValue(Class<?> type) {
+    protected Map<Object, Object> computeValue(Class<?> aClass) {
         Map<Object,Object> m = new HashMap<>();
-        for(Field f: type.getDeclaredFields()) {
+        for(Field f: aClass.getDeclaredFields()) {
             if(f.isEnumConstant())
             try {
                 Object constant = f.get(null);
-                //Integer id = f.getAnnotation(IStatus.class).value();
                 IStatus status = f.getAnnotation(IStatus.class);
                 m.put(status.value(), constant);
                 m.put(constant, status);
@@ -31,16 +30,19 @@ final class Helper extends ClassValue<Map<Object,Object>> {
 public interface IStatusEnum {
     String name();
     Class<? extends Enum<?>> getDeclaringClass(); 
-    static <T extends Enum<T>&IStatusEnum> T fromDb(Class<T> type, int id) {
-        return type.cast(Helper.INSTANCE.get(type).get(id));
+    static <T extends Enum<T>&IStatusEnum> T fromDb(Class<T> aClass, int dbValue) {
+        return aClass.cast(StatusEnumHelper.INSTANCE.get(aClass).get(dbValue));
     }
     default int toDb() {
-        return ((IStatus)Helper.INSTANCE.get(getDeclaringClass()).get(this)).value();
+        return ((IStatus)StatusEnumHelper.INSTANCE.get(getDeclaringClass()).get(this)).value();
+    }
+    default boolean equalsToDb(int dbValue) {
+        return toDb() == dbValue;
     }
     default String getFullname() {
         return getDeclaringClass().getSimpleName() + "." + name();
     }
     default String getDesc() {
-        return ((IStatus)Helper.INSTANCE.get(getDeclaringClass()).get(this)).desc();
+        return ((IStatus)StatusEnumHelper.INSTANCE.get(getDeclaringClass()).get(this)).desc();
     }
 }

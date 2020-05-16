@@ -20,7 +20,12 @@ public class FlowStatusEnumTest {
     }
 
     @Test
+    void testEqualsToDb() {
+        assert(FlowStatusEnum.UNSUBMITTED.equalsToDb(1));
+    }
+
+    @Test
     void testGetDesc() {
-        assert("已提交".equals(FlowStatusEnum.SUBMITTED.getDesc()));
+        assert("Submitted".equals(FlowStatusEnum.SUBMITTED.getDesc()));
     }
 }
