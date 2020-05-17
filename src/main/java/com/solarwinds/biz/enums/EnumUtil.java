@@ -14,6 +14,13 @@ import java.util.Map;
  * Utility for enum types which implements interface IStatusEnum or ITypeEnum
  */
 public class EnumUtil {
+
+    public static <T extends Enum<T> & IStatusEnum> T fromDb(Class<T> enumClass, int dbValue) {
+        return IStatusEnum.fromDb(enumClass, dbValue);
+    }
+    public static <T extends Enum<T> & ITypeEnum> T fromDb(Class<T> enumClass, String dbValue) {
+        return ITypeEnum.fromDb(enumClass, dbValue);
+    }
     /*
      * Encapsulates all values of an enum and returns as a list of map
      *
