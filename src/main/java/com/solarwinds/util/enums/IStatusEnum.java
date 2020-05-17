@@ -9,9 +9,9 @@ final class StatusEnumHelper extends ClassValue<Map<Object,Object>> {
     static final StatusEnumHelper INSTANCE = new StatusEnumHelper();
 
     @Override 
-    protected Map<Object, Object> computeValue(Class<?> aClass) {
+    protected Map<Object, Object> computeValue(Class<?> enumClass) {
         Map<Object,Object> m = new HashMap<>();
-        for(Field f: aClass.getDeclaredFields()) {
+        for(Field f: enumClass.getDeclaredFields()) {
             if(f.isEnumConstant())
             try {
                 Object constant = f.get(null);
@@ -19,8 +19,8 @@ final class StatusEnumHelper extends ClassValue<Map<Object,Object>> {
                 m.put(status.value(), constant);
                 m.put(constant, status);
             }
-            catch(IllegalAccessException ex) {
-                throw new IllegalStateException(ex);
+            catch(IllegalAccessException e) {
+                throw new IllegalStateException(e);
             }
         }
         return Collections.unmodifiableMap(m);
@@ -30,8 +30,8 @@ final class StatusEnumHelper extends ClassValue<Map<Object,Object>> {
 public interface IStatusEnum {
     String name();
     Class<? extends Enum<?>> getDeclaringClass(); 
-    static <T extends Enum<T>&IStatusEnum> T fromDb(Class<T> aClass, int dbValue) {
-        return aClass.cast(StatusEnumHelper.INSTANCE.get(aClass).get(dbValue));
+    static <T extends Enum<T>&IStatusEnum> T fromDb(Class<T> enumClass, int dbValue) {
+        return enumClass.cast(StatusEnumHelper.INSTANCE.get(enumClass).get(dbValue));
     }
     default int toDb() {
         return ((IStatus)StatusEnumHelper.INSTANCE.get(getDeclaringClass()).get(this)).value();

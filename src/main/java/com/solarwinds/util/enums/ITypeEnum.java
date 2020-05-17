@@ -9,9 +9,9 @@ final class TypeEnumHelper extends ClassValue<Map<Object,Object>> {
     static final TypeEnumHelper INSTANCE = new TypeEnumHelper();
 
     @Override 
-    protected Map<Object, Object> computeValue(Class<?> aClass) {
+    protected Map<Object, Object> computeValue(Class<?> enumClass) {
         Map<Object,Object> m = new HashMap<>();
-        for(Field f: aClass.getDeclaredFields()) {
+        for(Field f: enumClass.getDeclaredFields()) {
             if(f.isEnumConstant())
             try {
                 Object constant = f.get(null);
@@ -19,8 +19,8 @@ final class TypeEnumHelper extends ClassValue<Map<Object,Object>> {
                 m.put(type.value().toUpperCase(), constant);
                 m.put(constant, type);
             }
-            catch(IllegalAccessException ex) {
-                throw new IllegalStateException(ex);
+            catch(IllegalAccessException e) {
+                throw new IllegalStateException(e);
             }
         }
         return Collections.unmodifiableMap(m);
@@ -30,10 +30,10 @@ final class TypeEnumHelper extends ClassValue<Map<Object,Object>> {
 public interface ITypeEnum {
     String name();
     Class<? extends Enum<?>> getDeclaringClass(); 
-    static <T extends Enum<T>&ITypeEnum> T fromDb(Class<T> aClass, String dbValue) {
+    static <T extends Enum<T>&ITypeEnum> T fromDb(Class<T> enumClass, String dbValue) {
         if (null == dbValue)
             return null;
-        return aClass.cast(TypeEnumHelper.INSTANCE.get(aClass).get(dbValue.toUpperCase()));
+        return enumClass.cast(TypeEnumHelper.INSTANCE.get(enumClass).get(dbValue.toUpperCase()));
     }
     default String toDb() {
         return ((IType)TypeEnumHelper.INSTANCE.get(getDeclaringClass()).get(this)).value();

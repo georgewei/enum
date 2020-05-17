@@ -10,4 +10,3 @@ public @interface IType {
     String value();
     String desc();
 }
-

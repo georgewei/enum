@@ -10,4 +10,3 @@ public @interface IStatus {
     int value();
     String desc();
 }
-
