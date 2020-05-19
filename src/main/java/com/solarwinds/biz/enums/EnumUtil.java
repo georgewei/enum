@@ -22,12 +22,30 @@ public class EnumUtil {
         return ITypeEnum.fromDb(enumClass, dbValue);
     }
 
+    public static <T extends Enum<T> & IStatusEnum> String getDesc(Class<T> enumClass, Integer dbValue) {
+        return null == dbValue ? null : getDesc(enumClass, dbValue.intValue());
+    }
+    public static <T extends Enum<T> & IStatusEnum> String getDesc(Class<T> enumClass, int dbValue) {
+        T type = fromDb(enumClass, dbValue);
+        if (null != type)
+            return type.getDesc();
+        return null;
+    }
+    public static <T extends Enum<T> & ITypeEnum> String getDesc(Class<T> enumClass, String dbValue) {
+        if (null != dbValue) {
+            T type = fromDb(enumClass, dbValue);
+            if (null != type)
+                return type.getDesc();
+        }
+        return null;
+    }
+
     public static String KEY_NAME_FOR_VALUE = "valueKeyName";
     public static String KEY_NAME_FOR_DESC = "descKeyName";
     private static Map<String, String> DEFAULT_MAPPED_KEYNAMES = new HashMap<String, String>(){{
-        put(KEY_NAME_FOR_VALUE, "code");
-        put(KEY_NAME_FOR_DESC, "name");
-        }};
+        put(KEY_NAME_FOR_VALUE, "value");
+        put(KEY_NAME_FOR_DESC, "desc");
+    }};
     /*
      * Encapsulates all values of an enum and returns as a list of map use default mapped key names
      *
@@ -96,6 +114,7 @@ public class EnumUtil {
                 throw new RuntimeException(String.format("Incorrect definition of mapped key names. Keys named '%s' and '%s' required.", KEY_NAME_FOR_VALUE, KEY_NAME_FOR_DESC));
         }
     }
+
     private static Map<String, Object> enumValueToMap(Object dbValue, String desc,
                                                       Map<String, String> mappedKeyNames) {
         Map<String, Object> map = new HashMap<>();
