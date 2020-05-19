@@ -7,30 +7,30 @@ import java.util.List;
 import java.util.Map;
 
 @Test
-public class EnumUtilTest {
+public class EnumUtilsTest {
 
     @Test
     void testToListTypeEnum() {
-        List<Map<String, Object>> result = EnumUtil.getValueList(AssetTypeEnum.class, 0);
+        List<Map<String, Object>> result = EnumUtils.getValueList(AssetTypeEnum.class, 0);
         assert result.size() == 5;
 
         for (Map<String, Object> m: result) {
-            String value = (String)m.get("code");
+            String value = (String)m.get("value");
             switch (value) {
                 case "r":
-                    assert m.get("name").equals("creditor's rights");
+                    assert m.get("desc").equals("creditor's rights");
                     break;
                 case "h":
-                    assert m.get("name").equals("house");
+                    assert m.get("desc").equals("house");
                     break;
                 case "s":
-                    assert m.get("name").equals("stock");
+                    assert m.get("desc").equals("stock");
                     break;
                 case "c":
-                    assert m.get("name").equals("construction in progress");
+                    assert m.get("desc").equals("construction in progress");
                     break;
                 case "l":
-                    assert m.get("name").equals("land");
+                    assert m.get("desc").equals("land");
                     break;
                 default:
             }
@@ -39,10 +39,10 @@ public class EnumUtilTest {
 
     @Test
     void testToListStatusEnum() {
-        List<Map<String, Object>> result = EnumUtil.getValueList(FlowStatusEnum.class,
+        List<Map<String, Object>> result = EnumUtils.getValueList(FlowStatusEnum.class,
                 new HashMap<String, String>(){{
-                    put(EnumUtil.KEY_NAME_FOR_VALUE, "type");
-                    put(EnumUtil.KEY_NAME_FOR_DESC, "name");
+                    put(EnumUtils.KEY_NAME_FOR_VALUE, "type");
+                    put(EnumUtils.KEY_NAME_FOR_DESC, "name");
                 }});
         assert result.size() == 4;
 
