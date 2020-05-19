@@ -1,33 +1,40 @@
 package com.solarwinds.biz.enums;
 
-import com.solarwinds.util.enums.ITypeEnum;
-
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 @Test
 public class AssetTypeEnumTest {
 
-    @Test
-    void testFromDb() {
-        Assert.assertTrue(AssetTypeEnum.RIGHTS == ITypeEnum.fromDb(AssetTypeEnum.class, "R"));
-        Assert.assertTrue(AssetTypeEnum.HOUSE == ITypeEnum.fromDb(AssetTypeEnum.class, "h"));
-        Assert.assertTrue(null == ITypeEnum.fromDb(AssetTypeEnum.class, "house"));
+    @DataProvider
+    private static final Object[][] getParams() {
+        return new Object[][] {
+            {AssetTypeEnum.RIGHTS, "R"},
+            {AssetTypeEnum.HOUSE, "h"},
+            {AssetTypeEnum.CIP, "c"},
+            {null, "house"}
+        };
     }
 
-    @Test
-    void testToDb() {
-        assert(AssetTypeEnum.CIP.toDb().equals("c"));
+    @Test(dataProvider = "getParams")
+    void testFromDb(AssetTypeEnum e, String dbValue) {
+        Assert.assertTrue(e == EnumUtils.fromDb(AssetTypeEnum.class, dbValue));
     }
 
-    @Test
-    void testEqualsToDb() {
-        assert(AssetTypeEnum.STOCK.equalsToDb("s"));
-        assert(AssetTypeEnum.CIP.equalsToDb("C"));
+    @Test(dataProvider = "getParams")
+    void testToDb(AssetTypeEnum e, String dbValue) {
+        java.util.Optional.ofNullable(e).ifPresent(
+            e1 -> Assert.assertTrue(e1.toDb().equals(dbValue.toLowerCase())));
+    }
+
+    @Test(dataProvider = "getParams")
+    void testEqualsToDb(AssetTypeEnum e, String dbValue) {
+        java.util.Optional.ofNullable(e).ifPresent(
+            e1 -> Assert.assertTrue(e1.equalsToDb(dbValue)));
     }
 
     @Test
     void testGetDesc() {
-        assert("stock".equals(AssetTypeEnum.STOCK.getDesc()));
+        Assert.assertTrue("stock".equals(AssetTypeEnum.STOCK.getDesc()));
     }
 }

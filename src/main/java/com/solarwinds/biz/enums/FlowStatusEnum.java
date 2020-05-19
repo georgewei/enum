@@ -3,8 +3,6 @@ package com.solarwinds.biz.enums;
 import com.solarwinds.util.enums.IStatus;
 import com.solarwinds.util.enums.IStatusEnum;
 
-import java.util.List;
-
 public enum FlowStatusEnum implements IStatusEnum {
     @IStatus(value = 1, desc = "Unsubmitted") UNSUBMITTED,
     @IStatus(value = 2, desc = "Submitted") SUBMITTED,

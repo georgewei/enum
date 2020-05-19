@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Utility for enum types which implements interface IStatusEnum or ITypeEnum
  */
-public class EnumUtil {
+public class EnumUtils {
 
     public static <T extends Enum<T> & IStatusEnum> T fromDb(Class<T> enumClass, int dbValue) {
         return IStatusEnum.fromDb(enumClass, dbValue);
